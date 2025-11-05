@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario y Caja</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header con navegación -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">📦 Mi Negocio</h1>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Menú de navegación -->
+    <nav class="nav-menu" id="navMenu">
+        <button class="nav-item" data-view="dashboard">
+            <span class="nav-icon">🏠</span>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="inventario">
+            <span class="nav-icon">📦</span>
+            <span>Inventario</span>
+        </button>
+        <button class="nav-item" data-view="ventas">
+            <span class="nav-icon">🛒</span>
+            <span>Registrar Venta</span>
+        </button>
+        <button class="nav-item" data-view="caja">
+            <span class="nav-icon">💰</span>
+            <span>Caja</span>
+        </button>
+        <button class="nav-item" data-view="agregar">
+            <span class="nav-icon">➕</span>
+            <span>Agregar Producto</span>
+        </button>
+        <button class="nav-item" data-view="reportes">
+            <span class="nav-icon">📊</span>
+            <span>Reportes</span>
+        </button>
+    </nav>
+
+    <!-- Vista Dashboard -->
+    <main class="main-content">
+        <section id="view-dashboard" class="view active">
+            <h2 class="view-title">Dashboard</h2>
+            
+            <div class="dashboard-cards">
+                <div class="stat-card" style="background-color: var(--color-bg-1);">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Productos en Inventario</div>
+                        <div class="stat-value" id="totalProductos">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="background-color: var(--color-bg-3);">
+                    <div class="stat-icon">💵</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Ventas del Día</div>
+                        <div class="stat-value" id="ventasDelDia">$0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="background-color: var(--color-bg-2);">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Saldo en Caja</div>
+                        <div class="stat-value" id="saldoCaja">$0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="background-color: var(--color-bg-4);">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Stock Bajo</div>
+                        <div class="stat-value" id="stockBajo">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3 class="section-subtitle">Acciones Rápidas</h3>
+                <div class="action-buttons">
+                    <button class="btn btn--primary" onclick="cambiarVista('ventas')">
+                        🛒 Registrar Venta
+                    </button>
+                    <button class="btn btn--secondary" onclick="cambiarVista('inventario')">
+                        📦 Ver Inventario
+                    </button>
+                    <button class="btn btn--secondary" onclick="cambiarVista('caja')">
+                        💰 Ver Caja
+                    </button>
+                    <button class="btn btn--secondary" onclick="cambiarVista('agregar')">
+                        ➕ Agregar Producto
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista Inventario -->
+        <section id="view-inventario" class="view">
+            <h2 class="view-title">Inventario de Productos</h2>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInventario" class="form-control" placeholder="Buscar por nombre o código...">
+            </div>
+
+            <div id="listaProductos" class="productos-grid"></div>
+        </section>
+
+        <!-- Vista Registrar Venta -->
+        <section id="view-ventas" class="view">
+            <h2 class="view-title">Registrar Venta</h2>
+            
+            <div class="card">
+                <div class="card__body">
+                    <form id="formVenta">
+                        <div class="form-group">
+                            <label class="form-label" for="productoVenta">Producto</label>
+                            <select id="productoVenta" class="form-control" required>
+                                <option value="">Seleccionar producto...</option>
+                            </select>
+                        </div>
+
+                        <div id="infoProductoVenta" class="producto-info" style="display: none;">
+                            <div class="info-row">
+                                <span class="info-label">Precio unitario:</span>
+                                <span class="info-value" id="precioUnitario">$0</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Stock disponible:</span>
+                                <span class="info-value" id="stockDisponible">0</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="cantidadVenta">Cantidad</label>
+                            <input type="number" id="cantidadVenta" class="form-control" min="1" required>
+                        </div>
+
+                        <div class="total-venta">
+                            <span class="total-label">Total:</span>
+                            <span class="total-value" id="totalVenta">$0</span>
+                        </div>
+
+                        <button type="submit" class="btn btn--primary btn--full-width">
+                            ✅ Registrar Venta
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista Caja -->
+        <section id="view-caja" class="view">
+            <h2 class="view-title">Gestión de Caja</h2>
+            
+            <div class="caja-summary">
+                <div class="card">
+                    <div class="card__body">
+                        <div class="saldo-actual">
+                            <span class="saldo-label">Saldo Actual</span>
+                            <span class="saldo-value" id="saldoActual">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="caja-actions">
+                <button class="btn btn--secondary" onclick="mostrarFormularioTransaccion('ingreso')">
+                    💵 Registrar Ingreso
+                </button>
+                <button class="btn btn--secondary" onclick="mostrarFormularioTransaccion('gasto')">
+                    💸 Registrar Gasto
+                </button>
+            </div>
+
+            <div id="formTransaccion" class="card" style="display: none; margin-top: var(--space-16);">
+                <div class="card__body">
+                    <h3 class="section-subtitle" id="tituloTransaccion"></h3>
+                    <form id="formNuevaTransaccion">
+                        <div class="form-group">
+                            <label class="form-label" for="descripcionTransaccion">Descripción</label>
+                            <input type="text" id="descripcionTransaccion" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="montoTransaccion">Monto</label>
+                            <input type="number" id="montoTransaccion" class="form-control" min="0.01" step="0.01" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn--primary">Guardar</button>
+                            <button type="button" class="btn btn--secondary" onclick="cancelarTransaccion()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="caja-resumen">
+                <h3 class="section-subtitle">Resumen</h3>
+                <div class="resumen-grid">
+                    <div class="resumen-item">
+                        <span class="resumen-label">Total Ventas:</span>
+                        <span class="resumen-value" id="totalVentas">$0</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span class="resumen-label">Total Ingresos:</span>
+                        <span class="resumen-value" id="totalIngresos">$0</span>
+                    </div>
+                    <div class="resumen-item">
+                        <span class="resumen-label">Total Gastos:</span>
+                        <span class="resumen-value" id="totalGastos">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">Historial de Transacciones</h3>
+            <div id="listaTransacciones" class="transacciones-lista"></div>
+        </section>
+
+        <!-- Vista Agregar Producto -->
+        <section id="view-agregar" class="view">
+            <h2 class="view-title">Agregar Nuevo Producto</h2>
+            
+            <div class="card">
+                <div class="card__body">
+                    <form id="formAgregarProducto">
+                        <div class="form-group">
+                            <label class="form-label" for="nombreProducto">Nombre del Producto *</label>
+                            <input type="text" id="nombreProducto" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="codigoProducto">Código/SKU *</label>
+                            <input type="text" id="codigoProducto" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="precioProducto">Precio *</label>
+                            <input type="number" id="precioProducto" class="form-control" min="0.01" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="stockProducto">Stock Inicial *</label>
+                            <input type="number" id="stockProducto" class="form-control" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="stockMinimoProducto">Stock Mínimo</label>
+                            <input type="number" id="stockMinimoProducto" class="form-control" min="0" value="5">
+                        </div>
+
+                        <button type="submit" class="btn btn--primary btn--full-width">
+                            💾 Guardar Producto
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vista Reportes -->
+        <section id="view-reportes" class="view">
+            <h2 class="view-title">Reportes y Estadísticas</h2>
+            
+            <div class="card">
+                <div class="card__body">
+                    <h3 class="section-subtitle">Productos Más Vendidos</h3>
+                    <div id="topProductos" class="top-productos"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card__body">
+                    <h3 class="section-subtitle">Productos con Stock Bajo</h3>
+                    <div id="stockBajoLista" class="stock-bajo-lista"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card__body">
+                    <h3 class="section-subtitle">Resumen de Ventas</h3>
+                    <div id="resumenVentas" class="resumen-ventas"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de confirmación -->
+    <div id="modalConfirmacion" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon"></div>
+            <h3 id="modalTitulo"></h3>
+            <p id="modalMensaje"></p>
+            <button class="btn btn--primary btn--full-width" onclick="cerrarModal()">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- Modal de detalle de producto -->
+    <div id="modalProducto" class="modal">
+        <div class="modal-content">
+            <h3 id="productoModalTitulo"></h3>
+            <div id="productoModalDetalle"></div>
+            <div class="modal-actions">
+                <button class="btn btn--secondary" onclick="cerrarModalProducto()">Cerrar</button>
+                <button class="btn btn--primary" id="btnEliminarProducto" onclick="eliminarProductoActual()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
